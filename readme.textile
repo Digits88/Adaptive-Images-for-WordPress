@@ -2,7 +2,7 @@ h1. Adaptive-Images for WordPress
 
 Handle different image dimensions, aspect ratios (automatic cropping) and jpeg compression in relation to images, screen-resolutions and screen-densities.
 
-* requires WordPress 5.3
+* requires WordPress 3.5
 * works on Multisites
 * intended for use with content based on plugins like "advanced-custom-fields"
 * works also with inserting images in the editor for now (not recommended)
