@@ -2,7 +2,7 @@
     
     include( $themepath . 'config/config.php');
                                     
-    $config['cache_path']           = 'adaptive-images-cache'; 
+    $config['cache_path']           = 'ai-cache'; 
     $config['jpg_quality']          = 95; // 100 to 0
     $config['jpg_quality_retina']   = 50; // 100 to 0
     $config['watch_cache']          = TRUE;
