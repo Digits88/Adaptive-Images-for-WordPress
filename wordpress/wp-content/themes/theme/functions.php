@@ -16,11 +16,11 @@
         
 	// }
 	
-    // ADAPTIVE IMAGES ( Version 10 ) {
+    // ADAPTIVE IMAGES ( Version 11 ) {
     
         add_image_size( 'adaptive-image-base', '2000', '9999', /* crop */ false );
 
-    	/* get breakpoint image function */
+    	/* get adaptive image function */
     	function get_adaptive_image( $p = array() ) {
 
     		$p += array(
@@ -161,7 +161,7 @@
     		return  $img_src.$sufix;
     	}
     
-        /* get breakpoint image work on multisite */
+        /* get adaptive image work on multisite */
         function multisite_urls_2_real_urls( $buffer ) {
         
             global $current_blog;

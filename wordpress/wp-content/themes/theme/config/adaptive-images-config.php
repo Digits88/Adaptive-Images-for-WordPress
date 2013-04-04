@@ -19,7 +19,7 @@
         $config['debug_mode']       = TRUE; // insert the image dimensions, the filesize and the ratio
     }
     
-    $config['breakpoints'] = array(
+    $config['resolutions'] = array(
         'mobile' => 0, 
         'medium' => 1000,
         'large' => 1300
@@ -27,24 +27,24 @@
     
     /* example
         
-        // defining the image-width relating to breakpoints
+        // defining the image-width relating to resolutions
     
             // by value:
-            $setup['name']['breakpoints'][0]['w'] = 300;
-            $setup['name']['breakpoints'][1000]['w'] = 600;
+            $setup['name']['resolutions'][0]['w'] = 300;
+            $setup['name']['resolutions'][1000]['w'] = 600;
     
-            // by $config['breakpoints'] names:
-            $setup['name']['breakpoints']['mobile']['w'] = 300;
-            $setup['name']['breakpoints']['medium']['w'] = 600;
+            // by $config['resolutions'] names:
+            $setup['name']['resolutions']['mobile']['w'] = 300;
+            $setup['name']['resolutions']['medium']['w'] = 600;
     
         // you can also define a height only
     
-            $setup['name']['breakpoints']['large']['h'] = 400;
+            $setup['name']['resolutions']['large']['h'] = 400;
     
         // you can also define width and height
         
-            $setup['name']['breakpoints']['large']['w'] = 400;
-            $setup['name']['breakpoints']['large']['h'] = 400;
+            $setup['name']['resolutions']['large']['w'] = 400;
+            $setup['name']['resolutions']['large']['h'] = 400;
     
         // you can also define a aspect-ratio depending on a width or height
     

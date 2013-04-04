@@ -77,7 +77,7 @@
         
         // SCRIPT VARIABLES {
         
-            $breakpoints        = $config['breakpoints']; // the image break-points to use in the src-parameter 
+            $resolutions        = $config['resolutions']; // the image break-points to use in the src-parameter 
             $cache_path         = $config['cache_path']; // where to store the generated re-sized images. Specify from your document root!
             $jpg_quality        = $config['jpg_quality']; // the quality of any generated JPGs on a scale of 0 to 100
             $jpg_quality_retina = $config['jpg_quality_retina']; // the quality of any generated JPGs on a scale of 0 to 100 for retina
@@ -97,7 +97,7 @@
             if ( isset($setup[$_GET['size']]['jpg_quality']) ) $jpg_quality = $setup[$_GET['size']]['jpg_quality'];
             if ( isset($setup[$_GET['size']]['jpg_quality_retina']) ) $jpg_quality_retina = $setup[$_GET['size']]['jpg_quality_retina'];
 
-            foreach ($setup[$_GET['size']]['breakpoints'] as $key => $item) {
+            foreach ($setup[$_GET['size']]['resolutions'] as $key => $item) {
                 $images_param[$key]['val'] = $item;
             }
         
@@ -696,7 +696,7 @@
                         $width = $key;
                     }
                     else {
-                        $width = $breakpoints[$key];
+                        $width = $resolutions[$key];
                     }
                     
                     if ( $width <= $total_width ) {
