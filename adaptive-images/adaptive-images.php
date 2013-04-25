@@ -11,14 +11,14 @@
         
         extended by:
             GitHub:     https://github.com/johannheyne/adaptive-images-for-wordpress
-            Version:    1
+            Version:    1.1
         
     } */
     
     // CONFIG {
     
-        $themefolder = 'theme/';
-        $wordpressfolder = 'wordpress/';
+        $themefolder = 'ventocom/';
+        $wordpressfolder = 'backend/';
         
     // }
     
@@ -39,7 +39,7 @@
         // PATHS }
         
         // IF THERE IS NO SIZE PARAMETER {
-        
+            
             if ( !$_GET['size'] ) {
                 
                 sendImage($source_file, $browser_cache);
@@ -93,6 +93,23 @@
             );
         
             if ( isset($setup[$_GET['size']]['ratio']) ) $setup_ratio_arr  = explode(':', $setup[$_GET['size']]['ratio']);
+            
+            if ( isset( $_GET['ratio'] ) ) {
+                
+                $temp = explode('-', $_GET['ratio']);
+                
+                if ( count( $temp ) == 2 ) {
+                
+                    $temp[0] = (int)$temp[0];
+                    $temp[1] = (int)$temp[1];
+                    
+                    if ( $temp[0] > 0 && $temp[1] > 0 ) {
+                        
+                        $setup_ratio_arr = $temp;
+                    }
+                }
+            }
+            
             if ( isset($setup[$_GET['size']]['sharpen']['amount']) ) $config['sharpen']['amount'] = $setup[$_GET['size']]['sharpen']['amount'];
             if ( isset($setup[$_GET['size']]['jpg_quality']) ) $jpg_quality = $setup[$_GET['size']]['jpg_quality'];
             if ( isset($setup[$_GET['size']]['jpg_quality_retina']) ) $jpg_quality_retina = $setup[$_GET['size']]['jpg_quality_retina'];
