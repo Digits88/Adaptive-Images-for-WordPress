@@ -17,7 +17,7 @@
     
     // CONFIG {
     
-        $themefolder = 'ventocom/';
+        $themefolder = 'themefolder/';
         $wordpressfolder = 'backend/';
         
     // }
