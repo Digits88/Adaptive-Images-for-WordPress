@@ -16,10 +16,10 @@
         
 	// }
 	
-    // ADAPTIVE IMAGES ( Version 11 ) {
+    // ADAPTIVE IMAGES ( Version 12 (AIFWP 1.1) ) {
     
-        add_image_size( 'adaptive-image-base', '2000', '9999', /* crop */ false );
-
+        add_image_size( 'adaptive-image-base', '2000', '2000', /* crop */ false );
+    
     	/* get adaptive image function */
     	function get_adaptive_image( $p = array() ) {
 
@@ -28,6 +28,7 @@
         		'id' => false, 
         		'file' => false, 
         		'alt' => false, 
+        		'ratio' => false, 
         		'img_class' => '',
         		'img_data' => false,
         		'link_image' => false, /* true or size */
@@ -38,10 +39,17 @@
         		'link_title' => false,
         		'link_data' => false
         	);
-
-        	/* Version 04.07.2012 */
-
+            
+            $p['name'] = preg_replace( '/[^a-z0-9\-_]*/', '', $p['name'] );
+            if ( $p['ratio'] ) $p['ratio'] = str_replace( ':', '-', preg_replace( '/[^0-9\:\-]*/', '', $p['ratio'] ) );
+            
     		$sufix = '?size=' . $p['name'];
+    		
+    		if ( $p['ratio'] ) {
+    		    
+    		    $sufix .= '&ratio=' . $p['ratio'];
+    		}
+    		
     		$img_attr = array();
 
     		/* image src */
@@ -147,15 +155,26 @@
     		return  $return;
     	}
 
-    	function get_adaptive_image_src( $p = array(
-    		'name' => 'full', 
-    		'id' => false,
-    	) ) {
-
+    	function get_adaptive_image_src( $p = array() ) {
+            
+            $p += array(
+                'name' => 'full', 
+        		'ratio' => false, 
+        		'id' => false
+        	);
+        	
+            $p['name'] = preg_replace( '/[^a-z0-9\-_]*/', '', $p['name'] );
+            if ( $p['ratio'] ) $p['ratio'] = str_replace( ':', '-', preg_replace( '/[^0-9\:\-]*/', '', $p['ratio'] ) );
+            
     		$sufix = '?size=' . $p['name'];
+    		
+    		if ( $p['ratio'] ) {
+    		    
+    		    $sufix .= '&ratio=' . $p['ratio'];
+    		}
 
     		/* image src */
-    		$img_param = wp_get_attachment_image_src( $p['id'], 'large' );
+    		$img_param = wp_get_attachment_image_src( $p['id'], 'adaptive-image-base' );
     		$img_src = $img_param[0];
 
     		return  $img_src.$sufix;
@@ -182,7 +201,7 @@
         }
     
 	// }
-	
+    
     // ADAPTIVE-IMAGE SIZES FOR USING IN THE EDITOR ( Version 1 ) {
 	    
 	    function get_editor_imagesizes() {
