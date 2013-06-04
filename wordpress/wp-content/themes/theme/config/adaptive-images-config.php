@@ -83,5 +83,15 @@
             $setup['name']['filter'][IMG_FILTER_GRAYSCALE] = true;
             $setup['name']['filter'][IMG_FILTER_COLORIZE] = array(0, 0, 100);
             
+            
+        Cropping Rules
+
+            Now we can change the way cropping behaves.
+            Default value is false and causes centered cropping (center center)
+            "top" causes (top center) and is good for website screenshots
+            More cropping options will follow.
+            
+            $setup['name']['crop'] = 'top';
+            
      */
 ?>
