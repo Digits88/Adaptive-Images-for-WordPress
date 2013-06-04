@@ -25,38 +25,63 @@
         'large' => 1300
     );
     
-    /* example
+    /* Documentation
         
-        // defining the image-width relating to resolutions
+        Defining the image-width relating to resolution
     
-            // by value:
+            // resolution by value:
             $setup['name']['resolutions'][0]['w'] = 300;
             $setup['name']['resolutions'][1000]['w'] = 600;
     
-            // by $config['resolutions'] names:
+            // resolution by $config['resolutions'] names:
             $setup['name']['resolutions']['mobile']['w'] = 300;
             $setup['name']['resolutions']['medium']['w'] = 600;
     
-        // you can also define a height only
+    
+        We can also define a height only
     
             $setup['name']['resolutions']['large']['h'] = 400;
     
-        // you can also define width and height
+    
+        We can also define width and height
         
             $setup['name']['resolutions']['large']['w'] = 400;
             $setup['name']['resolutions']['large']['h'] = 400;
     
-        // you can also define a aspect-ratio depending on a width or height
+    
+        We can also define a aspect-ratio depending on a width or height
     
             $setup['name']['ratio'] = '2:1';
     
-        // defining the jpeg-quality
+    
+        Defining the jpeg-quality
     
             $setup['name']['jpg_quality'] = 95;
             $setup['name']['jpg_quality_retina'] = 40;
     
-        // defining the amount of sharpening
+    
+        Defining the amount of sharpening
     
             $setup['name']['sharpen']['amount'] = 40;
+            
+            
+        Disabling retina
+        
+            We can disable the retina because in some cases, the image will be larger 
+            then the max size that a device can handle.
+            http://www.williammalone.com/articles/html5-javascript-ios-maximum-image-size/
+        
+            $setup['name']['retina'] = false;
+            
+            
+        Image filters
+        
+            Now we can add multiple php image filters.
+            http://php.net/manual/en/function.imagefilter.php
+            http://www.phpied.com/image-fun-with-php-part-2
+            
+            $setup['name']['filter'][IMG_FILTER_GRAYSCALE] = true;
+            $setup['name']['filter'][IMG_FILTER_COLORIZE] = array(0, 0, 100);
+            
      */
 ?>

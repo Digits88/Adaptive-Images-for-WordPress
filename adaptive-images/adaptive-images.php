@@ -11,7 +11,8 @@
         
         extended by:
             GitHub:     https://github.com/johannheyne/adaptive-images-for-wordpress
-            Version:    1.1
+            Version:    1
+            Changed:    2013.05.28 10:45
         
     } */
     
@@ -81,6 +82,7 @@
             $cache_path         = $config['cache_path']; // where to store the generated re-sized images. Specify from your document root!
             $jpg_quality        = $config['jpg_quality']; // the quality of any generated JPGs on a scale of 0 to 100
             $jpg_quality_retina = $config['jpg_quality_retina']; // the quality of any generated JPGs on a scale of 0 to 100 for retina
+            $retina             = true;
             $sharpen            = $config['sharpen']['status']; // Shrinking images can blur details, perform a sharpen on re-scaled images?
             $watch_cache        = $config['watch_cache']; // check that the adapted image isn't stale (ensures updated source images are re-cached)
             $browser_cache      = $config['browser_cache']; // How long the BROWSER cache should last (seconds, minutes, hours, days. 7days by default)
@@ -91,6 +93,8 @@
                 'w' => false,
                 'h' => false
             );
+            $setup_crop = false;
+            $setup_filter = false;
         
             if ( isset($setup[$_GET['size']]['ratio']) ) $setup_ratio_arr  = explode(':', $setup[$_GET['size']]['ratio']);
             
@@ -113,6 +117,9 @@
             if ( isset($setup[$_GET['size']]['sharpen']['amount']) ) $config['sharpen']['amount'] = $setup[$_GET['size']]['sharpen']['amount'];
             if ( isset($setup[$_GET['size']]['jpg_quality']) ) $jpg_quality = $setup[$_GET['size']]['jpg_quality'];
             if ( isset($setup[$_GET['size']]['jpg_quality_retina']) ) $jpg_quality_retina = $setup[$_GET['size']]['jpg_quality_retina'];
+            if ( isset($setup[$_GET['size']]['retina']) ) $retina = $setup[$_GET['size']]['retina'];
+            if ( isset($setup[$_GET['size']]['crop']) ) $setup_crop = $setup[$_GET['size']]['crop'];
+            if ( isset($setup[$_GET['size']]['filter']) ) $setup_filter = $setup[$_GET['size']]['filter'];
 
             foreach ($setup[$_GET['size']]['resolutions'] as $key => $item) {
                 $images_param[$key]['val'] = $item;
@@ -211,7 +218,7 @@
         /* generates the given cache file for the given source file with the given resolution */
         function generateImage($source_file, $cache_file, $img_setup) {
     
-            global $sharpen, $jpg_quality, $jpg_quality_retina, $setup_ratio_arr;
+            global $sharpen, $jpg_quality, $jpg_quality_retina, $setup_ratio_arr, $setup_crop, $setup_filter, $retina;
             
             // GET IMAGE EXTENSION {
             
@@ -328,6 +335,18 @@
                         }
                     }
                     
+                    if ( $setup_crop ) {
+                    
+                        if ( isset( $setup_crop['behavior'] ) ) {
+
+                            $crop_behavior = explode( ' ', $setup_crop['behavior'] );
+                            
+                            if ( in_array( 'top' , $crop_behavior ) ) {
+                                $img_offset['y'] = 0;
+                            }
+                        }
+                    }
+                    
                 // OFFSET }
                 
                 /* OUT
@@ -385,12 +404,45 @@
                     break;
                 }
                 
+                
+                // PNG ALPHABLENDING
+                
                 if ( $extension == 'png' ) {
                     
                     imagealphablending($dst, false);
                     imagesavealpha($dst,true);
                     $transparent = imagecolorallocatealpha($dst, 255, 255, 255, 127);
                     imagefilledrectangle($dst, 0, 0, $img_new['w'], $img_new['h'], $transparent);
+                }
+                
+                
+                // FILTER
+                
+                if ( is_array( $setup_filter ) ) {
+                
+                    foreach ( $setup_filter as $key => $value ) {
+                        
+                        if ( $value === true ) {
+                            
+                            imagefilter( $src, $key );
+                        }
+                        elseif ( is_array( $value ) ) {
+                            
+                            if ( count( $value ) === 2 ) {
+                                
+                                imagefilter( $src, $key, $value[0], $value[1] );
+                            }
+                            
+                            if ( count( $value ) === 3 ) {
+                                
+                                imagefilter( $src, $key, $value[0], $value[1], $value[2] );
+                            }
+                        }
+                        else {
+                            
+                            imagefilter( $src, $key, $value );
+                        }
+                    }
                 }
             
             // GET SOURCE IMAGE }
@@ -702,7 +754,9 @@
                     $pixel_density = $cookie_data[1];
                 }
                 
-                if ( $pixel_density > 1 ) $jpg_quality = $jpg_quality_retina;
+                if ( !$retina ) $pixel_density = 1;
+                
+                if ( $pixel_density >= 2 ) $jpg_quality = $jpg_quality_retina;
                 
                 $current_breackpoint = 'undefinded';
                 
