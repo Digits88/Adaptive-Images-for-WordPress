@@ -702,7 +702,7 @@
                     $pixel_density = $cookie_data[1];
                 }
                 
-                if ( $pixel_density > 2 ) $jpg_quality = $jpg_quality_retina;
+                if ( $pixel_density > 1 ) $jpg_quality = $jpg_quality_retina;
                 
                 $current_breackpoint = 'undefinded';
                 
