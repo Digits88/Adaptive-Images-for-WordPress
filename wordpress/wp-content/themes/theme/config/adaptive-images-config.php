@@ -91,7 +91,7 @@
             "top" causes (top center) and is good for website screenshots
             More cropping options will follow.
             
-            $setup['name']['crop'] = 'top';
+            $setup['name']['crop']['behavior'] = 'top';
             
      */
 ?>
