@@ -92,6 +92,17 @@
             More cropping options will follow.
             
             $setup['name']['crop']['behavior'] = 'top';
+        
+        
+        Handling images with to low resolution
+            
+            If an image has a lower resolution than the AI result would be,
+            there are two options:
+                
+                false: the image will be skaled up
+                'preserve-size': the size of the image will be preserved
+                
+            $setup['name']['lowres'] = false;
             
      */
 ?>

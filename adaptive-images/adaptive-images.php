@@ -12,7 +12,7 @@
         extended by:
             GitHub:     https://github.com/johannheyne/adaptive-images-for-wordpress
             Version:    1
-            Changed:    2013.05.28 10:45
+            Changed:    2013.06.21 12:40
         
     } */
     
@@ -95,6 +95,7 @@
             );
             $setup_crop = false;
             $setup_filter = false;
+            $lowres = FALSE;
         
             if ( isset($setup[$_GET['size']]['ratio']) ) $setup_ratio_arr  = explode(':', $setup[$_GET['size']]['ratio']);
             
@@ -120,11 +121,12 @@
             if ( isset($setup[$_GET['size']]['retina']) ) $retina = $setup[$_GET['size']]['retina'];
             if ( isset($setup[$_GET['size']]['crop']) ) $setup_crop = $setup[$_GET['size']]['crop'];
             if ( isset($setup[$_GET['size']]['filter']) ) $setup_filter = $setup[$_GET['size']]['filter'];
+            if ( isset($setup[$_GET['size']]['lowres']) ) $lowres = $setup[$_GET['size']]['lowres'];
 
             foreach ($setup[$_GET['size']]['resolutions'] as $key => $item) {
                 $images_param[$key]['val'] = $item;
             }
-        
+            
         // SCRIPT VARIABLES }
         
     // PREPARE }
@@ -218,7 +220,7 @@
         /* generates the given cache file for the given source file with the given resolution */
         function generateImage($source_file, $cache_file, $img_setup) {
     
-            global $sharpen, $jpg_quality, $jpg_quality_retina, $setup_ratio_arr, $setup_crop, $setup_filter, $retina;
+            global $sharpen, $jpg_quality, $jpg_quality_retina, $setup_ratio_arr, $setup_crop, $setup_filter, $retina, $lowres;
             
             // GET IMAGE EXTENSION {
             
@@ -298,6 +300,16 @@
                         }
                         
                     // IF SETUP HEIGHT }
+                    
+                    // LOWRES RULES {
+                    
+                        if ( $lowres == 'preserve-size' && ( $img_src['w'] < $img_new['w'] OR $img_src['h'] < $img_new['h']) ) {
+                            
+                            $img_new['w'] = $img_src['w'];
+                            $img_new['h'] = $img_src['h'];
+                        }
+                        
+                    // LOWRES RULES }
                     
                 // NEW SIZE }
                 
@@ -850,3 +862,4 @@
         sendImage($file, $browser_cache);
 
     // PROCEDURE }
+    
