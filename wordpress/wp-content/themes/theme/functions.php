@@ -16,7 +16,7 @@
         
 	// }
 	
-    // ADAPTIVE IMAGES ( Version 12 (AIFWP 1.1) ) {
+    // ADAPTIVE IMAGES ( Version 16 (AIFWP 1.1) ) {
     
         add_image_size( 'adaptive-image-base', '2000', '2000', /* crop */ false );
     
@@ -28,30 +28,26 @@
         		'id' => false, 
         		'file' => false, 
         		'alt' => false, 
-        		'ratio' => false, 
         		'img_class' => '',
         		'img_data' => false,
         		'link_image' => false, /* true or size */
         		'link_page' => false, /* true or id of page */
         		'link_url' => false,
         		'link_class' => false,
+        		'root_class' => false,
         		'link_rel' => false,
         		'link_title' => false,
-        		'link_data' => false
+        		'link_data' => false,
+        		'wrap' => false,
+        		'wrap_class' => false
         	);
-            
-            $p['name'] = preg_replace( '/[^a-z0-9\-_]*/', '', $p['name'] );
-            if ( $p['ratio'] ) $p['ratio'] = str_replace( ':', '-', preg_replace( '/[^0-9\:\-]*/', '', $p['ratio'] ) );
-            
-    		$sufix = '?size=' . $p['name'];
-    		
-    		if ( $p['ratio'] ) {
-    		    
-    		    $sufix .= '&ratio=' . $p['ratio'];
-    		}
-    		
-    		$img_attr = array();
 
+        	/* Version 04.07.2012 */
+
+    		$sufix = '?size=' . $p['name'];
+    		$img_attr = array();
+            $img_src = false;
+            
     		/* image src */
     		if ( $p['id'] ) {
     		    $img_param = wp_get_attachment_image_src( $p['id'], $p['name'] );
@@ -65,7 +61,26 @@
     		$link_rel = false;
     		$link_title = false;
     		$link_data = false;
-        
+            
+            /* root class */
+            if ( $p['root_class'] ) {
+            
+    	    	if ( $p['link_image'] OR $p['link_page'] OR $p['link_url'] ) {
+    		     
+        		     $p['link_class'] = trim( $p['link_class'] . ' ' . $p['root_class'] );
+        		}
+    		
+    	    	elseif ( $p['wrap'] ) {
+    		     
+        		     $p['wrap_class'] = trim( $p['wrap_class'] . ' ' . $p['root_class'] );
+        		}
+        		
+        		else {
+    		     
+        		     $p['img_class'] = trim( $p['img_class'] . ' ' . $p['root_class'] );
+        		}
+        	}
+            
     		/* image data */
             if ( $p['img_data'] ) {
                 foreach ( $p['img_data'] as $key => $value ) {
@@ -124,54 +139,60 @@
             /* return begin */
     		$return = '';
 		    
-		    /* return link open */
-    		if ( $link_url OR $link_class OR $link_rel OR $link_title ) {
-    		    if ( $link_url ) $link_url =  ' href="' . $link_url . '"';
-    		    $return .= '<a' . $link_url . $link_class . $link_rel . $link_title . $link_data . '>';
-    		}
+		    /* basic requirement check */
+		    if ( $img_src ) {
+		        
+		        /* wrap open */
 		    
-		    /* return image */
-    		$img_attr['src'] = $img_src . $sufix;
-    		$img_attr['class'] = 'resp ' . $p['img_class'];
+    		    if ( $p['wrap'] ) {
+		        
+    		        if ( $p['wrap_class'] ) $wrap_class = ' class="' .$p['wrap_class'] . '"';
+    		        $return .= '<' . $p['wrap'] . $wrap_class . '>';
+    		    }
 		    
-    		if ( $p['id'] ) {
-    		    if ( $p['alt'] ) $img_attr['alt'] = $p['alt'];
-    		    $return .= wp_get_attachment_image( $p['id'], 'adaptive-image-base', false, $img_attr );
-		    }
+    		    /* return link open */
+        		if ( $link_url OR $link_class OR $link_rel OR $link_title ) {
+        		    if ( $link_url ) $link_url =  ' href="' . $link_url . '"';
+        		    $return .= '<a' . $link_url . $link_class . $link_rel . $link_title . $link_data . '>';
+        		}
 		    
-		    if ( $p['file'] ) {
-		        $img_alt = '';
-		        if ( $p['alt'] ) $img_alt .= ' alt="' . $p['alt'] . '"';
-		        $return .= '<img src="' . $img_attr['src'] . '" class="' . $img_attr['class'] . '"' . $img_alt . '/>';
-		    }
+    		    /* return image */
+        		$img_attr['src'] = $img_src . $sufix;
+        		$img_attr['class'] = 'resp ' . $p['img_class'];
 		    
-		    /* return link close */
-    		if (  $link_url OR $link_class OR $link_rel OR $link_title ) $return .= '</a>';
-
-            /* remove image dimensions attributes */
-		    $return = remove_image_dimensions_attributes( $return );
+        		if ( $p['id'] ) {
+        		    if ( $p['alt'] ) $img_attr['alt'] = $p['alt'];
+        		    $return .= wp_get_attachment_image( $p['id'], 'adaptive-image-base', false, $img_attr );
+    		    }
+		    
+    		    if ( $p['file'] ) {
+    		        $img_alt = '';
+    		        if ( $p['alt'] ) $img_alt .= ' alt="' . $p['alt'] . '"';
+    		        $return .= '<img src="' . $img_attr['src'] . '" class="' . $img_attr['class'] . '"' . $img_alt . '/>';
+    		    }
+		    
+    		    /* return link close */
+        		if (  $link_url OR $link_class OR $link_rel OR $link_title ) $return .= '</a>';
+            
+                /* wrap close */
+    		    if ( $p['wrap'] ) {
+    		        $return .= '</' . $p['wrap'] . '>';
+    		    }
+		    
+                /* remove image dimensions attributes */
+    		    $return = remove_image_dimensions_attributes( $return );
+            }
             
             /* return */
     		return  $return;
     	}
 
-    	function get_adaptive_image_src( $p = array() ) {
-            
-            $p += array(
-                'name' => 'full', 
-        		'ratio' => false, 
-        		'id' => false
-        	);
-        	
-            $p['name'] = preg_replace( '/[^a-z0-9\-_]*/', '', $p['name'] );
-            if ( $p['ratio'] ) $p['ratio'] = str_replace( ':', '-', preg_replace( '/[^0-9\:\-]*/', '', $p['ratio'] ) );
-            
+    	function get_adaptive_image_src( $p = array(
+    		'name' => 'full', 
+    		'id' => false,
+    	) ) {
+
     		$sufix = '?size=' . $p['name'];
-    		
-    		if ( $p['ratio'] ) {
-    		    
-    		    $sufix .= '&ratio=' . $p['ratio'];
-    		}
 
     		/* image src */
     		$img_param = wp_get_attachment_image_src( $p['id'], 'adaptive-image-base' );
