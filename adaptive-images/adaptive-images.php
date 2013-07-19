@@ -39,6 +39,15 @@
             
         // PATHS }
         
+        // IF THERE IS NO COOKIE {
+        
+            if (!isset($_COOKIE['resolution']) ) {
+            
+                $_COOKIE['resolution'] = '9999,1';
+            }
+        
+        // IF THERE IS NO COOKIE }
+        
         // IF THERE IS NO SIZE PARAMETER {
             
             if ( !$_GET['size'] ) {
