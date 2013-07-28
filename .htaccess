@@ -1,6 +1,6 @@
 # BEGIN WordPress
 <IfModule mod_rewrite.c>
-	RewriteEngine On
+    	RewriteEngine On
 	RewriteBase /
 	Options +FollowSymlinks
 	RewriteRule ^index\.php$ - [L]
@@ -13,17 +13,17 @@
 # BEGIN Adaptive-Images
 <IfModule mod_rewrite.c>
 
-		# omiting directories from the Adaptive-Images process
-		RewriteCond %{REQUEST_URI} !adaptive-images-cache
-		RewriteCond %{REQUEST_URI} !wp-admin
-		RewriteCond %{REQUEST_URI} !plugins
-		RewriteCond %{REQUEST_URI} !themes
-		RewriteCond %{REQUEST_URI} !wp-includes
+	# omiting directories from the Adaptive-Images process
+	RewriteCond %{REQUEST_URI} !adaptive-images-cache
+	RewriteCond %{REQUEST_URI} !wp-admin
+	RewriteCond %{REQUEST_URI} !plugins
+	RewriteCond %{REQUEST_URI} !themes
+	RewriteCond %{REQUEST_URI} !wp-includes
 
-		# Send any GIF, JPG, or PNG request that IS NOT stored inside one of the above directories
-		# to adaptive-images.php so we can select appropriately sized versions
+	# Send any GIF, JPG, or PNG request that IS NOT stored inside one of the above directories
+	# to adaptive-images.php so we can select appropriately sized versions
 
-		RewriteRule \.(?:jpe?g|gif|png)$ adaptive-images/adaptive-images.php
+	RewriteRule \.(?:jpe?g|gif|png)$ adaptive-images/adaptive-images.php
 
 </IfModule>
 # END Adaptive-Images
