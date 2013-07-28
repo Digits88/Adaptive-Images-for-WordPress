@@ -324,5 +324,4 @@
         }
         add_filter( 'image_send_to_editor', 'my_image_send_to_editor', 10, 7 );
         
-        
 	// }
