@@ -12,7 +12,7 @@
         extended by:
             GitHub:     https://github.com/johannheyne/adaptive-images-for-wordpress
             Version:    1
-            Changed:    2013.06.21 12:40
+            Changed:    2013.08.26 20:14
         
     } */
     
@@ -781,6 +781,9 @@
                 
                 $current_breackpoint = 'undefinded';
                 
+                $img_setup['w'] = false;
+                $img_setup['h'] = false;
+                
                 foreach ($images_param as $key => $item) {
                     
                     if ( is_numeric($key) ) {
@@ -794,11 +797,11 @@
                     
                         $current_breackpoint = $width;
                         
-                        $img_setup['w'] = false;
-                        $img_setup['h'] = false;
-                        
-                        if ( $item['val']['w'] ) $img_setup['w'] = ceil( $item['val']['w'] * $pixel_density );
-                        if ( $item['val']['h'] ) $img_setup['h'] = ceil( $item['val']['h'] * $pixel_density );
+                        if ( !$img_setup['w'] || $item['val']['w'] > $img_setup['w'] ) {
+                            
+                            if ( $item['val']['w'] ) $img_setup['w'] = ceil( $item['val']['w'] * $pixel_density );
+                            if ( $item['val']['h'] ) $img_setup['h'] = ceil( $item['val']['h'] * $pixel_density );
+                        }
                     }
                 }
             }
@@ -871,4 +874,3 @@
         sendImage($file, $browser_cache);
 
     // PROCEDURE }
-    
