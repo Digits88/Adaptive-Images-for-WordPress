@@ -1,22 +1,25 @@
 <?php
     
-    include( $themepath . 'config/config.php');
+    if ( isset( $themepath ) ) {
     
-    $config['cache_path']           = 'ai-cache'; 
-    $config['jpg_quality']          = 95; // 100 to 0
-    $config['jpg_quality_retina']   = 50; // 100 to 0
-    $config['watch_cache']          = TRUE;
-    $config['browser_cache']        = 60 * 60 * 24; // period of time in second, the images will stay in cache of browsers
-    $config['prevent_cache']        = FALSE; // images will resized on every image request
-    $config['debug_mode']           = FALSE; // insert the image dimensions, the ratio and the device-width into the image
-    $config['sharpen']['status']    = TRUE; // enables sharpen
-    $config['sharpen']['amount']    = 20; // 0 is none, 30 is pleasant, max is 500
+        include( $themepath . 'config/config.php');
     
-    if ( config_site_is_type( 'test' ) ) {
+        $config['cache_path']           = 'ai-cache'; 
+        $config['jpg_quality']          = 95; // 100 to 0
+        $config['jpg_quality_retina']   = 50; // 100 to 0
+        $config['watch_cache']          = TRUE;
+        $config['browser_cache']        = 60 * 60 * 24; // period of time in second, the images will stay in cache of browsers
+        $config['prevent_cache']        = FALSE; // images will resized on every image request
+        $config['debug_mode']           = FALSE; // insert the image dimensions, the ratio and the device-width into the image
+        $config['sharpen']['status']    = TRUE; // enables sharpen
+        $config['sharpen']['amount']    = 20; // 0 is none, 30 is pleasant, max is 500
     
-        $config['browser_cache']    = 1; // period of time in second, the images will stay in cache of browsers
-        $config['prevent_cache']    = TRUE; // images will resized on every image request
-        $config['debug_mode']       = TRUE; // insert the image dimensions, the filesize and the ratio
+        if ( config_site_is_type( 'test' ) ) {
+    
+            $config['browser_cache']    = 1; // period of time in second, the images will stay in cache of browsers
+            $config['prevent_cache']    = TRUE; // images will resized on every image request
+            $config['debug_mode']       = TRUE; // insert the image dimensions, the filesize and the ratio
+        }
     }
     
     $config['resolutions'] = array(
@@ -105,4 +108,7 @@
             $setup['name']['lowres'] = false;
             
      */
+     
+     $setup['zoom']['resolutions']['mobile']['w'] = 960;
+     
 ?>
