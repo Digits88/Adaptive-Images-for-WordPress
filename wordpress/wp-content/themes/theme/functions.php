@@ -16,7 +16,7 @@
         
     // }
 
-    // ADAPTIVE IMAGES ( Version 20 (AIFWP 1.1) ) {
+    // ADAPTIVE IMAGES ( Version 21 (AIFWP 1.1) ) {
     
         add_image_size( 'adaptive-image-base', '2000', '2000', /* crop */ false );
     
@@ -247,24 +247,27 @@
                 $styles = array();
 
                 foreach ( $setup as $size => $item1 ) {
+                    
+                    if (  isset( $item1['use-max-width'] ) ) {
+                    
+                        foreach ( $item1['resolutions'] as $resolution => $item2 ) {
 
-                    foreach ( $item1['resolutions'] as $resolution => $item2 ) {
 
 
+                            if ( isset( $config['resolutions'][ $resolution ] ) ) {
 
-                        if ( isset( $config['resolutions'][ $resolution ] ) ) {
-
-                            $resolution = $config['resolutions'][ $resolution ];
-                        }
-
-                        if ( isset( $item2['w'] ) ) {
-
-                            if ( !isset( $styles[ $resolution ] ) ) {
-
-                                $styles[ $resolution ] = '';
+                                $resolution = $config['resolutions'][ $resolution ];
                             }
 
-                            $styles[ $resolution ] .= 'img.size-' . $size . '{max-width: ' . $item2['w'] . 'px;}';
+                            if ( isset( $item2['w'] ) ) {
+
+                                if ( !isset( $styles[ $resolution ] ) ) {
+
+                                    $styles[ $resolution ] = '';
+                                }
+
+                                $styles[ $resolution ] .= 'img.size-' . $size . '{max-width: ' . $item2['w'] . 'px;}';
+                            }
                         }
                     }
                 }

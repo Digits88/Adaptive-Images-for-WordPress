@@ -106,7 +106,14 @@
                 'preserve-size': the size of the image will be preserved
                 
             $setup['name']['lowres'] = false;
-            
+        
+        
+        Handling max-width of images
+
+            If an image should not displayed wider than it is defined in the resolution
+            settings.
+
+            $setup['name']['use-max-width'] = true; 
      */
      
      $setup['zoom']['resolutions']['mobile']['w'] = 960;
