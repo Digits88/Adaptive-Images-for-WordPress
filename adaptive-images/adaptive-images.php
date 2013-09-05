@@ -25,6 +25,12 @@
     
     // PREPARE {
         
+        // DEFAULTS {
+
+            $browser_cache = 1;
+
+        // }
+        
         // PATHS {
         
             $document_root = $_SERVER['DOCUMENT_ROOT'];
