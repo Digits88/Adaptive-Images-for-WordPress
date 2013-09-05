@@ -56,7 +56,7 @@
         
         // IF THERE IS NO SIZE PARAMETER {
             
-            if ( !$_GET['size'] ) {
+            if ( !isset( $_GET['size'] ) ) {
                 
                 sendImage($source_file, $browser_cache);
                 die();
