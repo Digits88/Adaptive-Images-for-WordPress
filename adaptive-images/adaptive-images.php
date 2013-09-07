@@ -12,7 +12,7 @@
         extended by:
             GitHub:     https://github.com/johannheyne/adaptive-images-for-wordpress
             Version:    1
-            Changed:    2013.09.07 12:37
+            Changed:    2013.09.07 15:28
         
     } */
     
@@ -102,6 +102,7 @@
             if ( isset($setup[$_GET['size']]['lowres']) ) $lowres = $setup[$_GET['size']]['lowres'];
 
             foreach ($setup[$_GET['size']]['resolutions'] as $key => $item) {
+                
                 $images_param[$key]['val'] = $item;
             }
             
@@ -806,8 +807,8 @@
                         
                         if ( !$img_setup['w'] || $item['val']['w'] > $img_setup['w'] ) {
                             
-                            if ( $item['val']['w'] ) $img_setup['w'] = ceil( $item['val']['w'] * $pixel_density );
-                            if ( $item['val']['h'] ) $img_setup['h'] = ceil( $item['val']['h'] * $pixel_density );
+                            if ( isset( $item['val']['w'] ) ) $img_setup['w'] = ceil( $item['val']['w'] * $pixel_density );
+                            if ( isset( $item['val']['h'] ) ) $img_setup['h'] = ceil( $item['val']['h'] * $pixel_density );
                         }
                     }
                 }
