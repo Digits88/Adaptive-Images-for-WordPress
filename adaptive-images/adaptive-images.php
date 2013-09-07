@@ -37,6 +37,11 @@
 
             include( $themepath  . 'config/adaptive-images-config.php');
             
+            if ( !isset( $config ) ) {
+            
+                sendErrorImage( "Configuration data in config/adaptive-images-config.php missing!" );
+            }
+            
         // PATHS }
         
         // SCRIPT VARIABLES {
