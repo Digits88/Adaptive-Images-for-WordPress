@@ -12,7 +12,7 @@
         extended by:
             GitHub:     https://github.com/johannheyne/adaptive-images-for-wordpress
             Version:    1
-            Changed:    2013.09.07 11:30
+            Changed:    2013.09.07 12:37
         
     } */
     
@@ -43,6 +43,16 @@
             }
             
         // PATHS }
+        
+        // IF THERE IS NO SIZE PARAMETER {
+            
+            if ( !isset( $_GET['size'] ) ) {
+                
+                sendImage( $source_file, 1 );
+                die();
+            }
+        
+        // IF THERE IS NO SIZE PARAMETER }
         
         // SCRIPT VARIABLES {
         
@@ -105,16 +115,6 @@
             }
         
         // IF THERE IS NO COOKIE }
-        
-        // IF THERE IS NO SIZE PARAMETER {
-            
-            if ( !isset( $_GET['size'] ) ) {
-                
-                sendImage($source_file, $browser_cache);
-                die();
-            }
-        
-        // IF THERE IS NO SIZE PARAMETER }
         
         // IF THERE IS AN UNKNOWN SIZE {
         
