@@ -12,7 +12,7 @@
         extended by:
             GitHub:     https://github.com/johannheyne/adaptive-images-for-wordpress
             Version:    1
-            Changed:    2013.08.26 20:14
+            Changed:    2013.09.07 11:30
         
     } */
     
@@ -24,12 +24,6 @@
     // }
     
     // PREPARE {
-        
-        // DEFAULTS {
-
-            $browser_cache = 1;
-
-        // }
         
         // PATHS {
         
@@ -44,52 +38,6 @@
             include( $themepath  . 'config/adaptive-images-config.php');
             
         // PATHS }
-        
-        // IF THERE IS NO COOKIE {
-        
-            if (!isset($_COOKIE['resolution']) ) {
-            
-                $_COOKIE['resolution'] = '9999,1';
-            }
-        
-        // IF THERE IS NO COOKIE }
-        
-        // IF THERE IS NO SIZE PARAMETER {
-            
-            if ( !isset( $_GET['size'] ) ) {
-                
-                sendImage($source_file, $browser_cache);
-                die();
-            }
-        
-        // IF THERE IS NO SIZE PARAMETER }
-        
-        // IF THERE IS AN UNKNOWN SIZE {
-        
-            if ( !$setup[$_GET['size']] ) {
-                
-                sendImage($source_file, $browser_cache);
-                die();
-            }
-        
-        // IF THERE IS AN UNKNOWN SIZE }
-        
-        // CACHE DIRECTORY CHECK {
-        
-            // does the $cache_path directory exist already?
-            if (!is_dir("$document_root/$cache_path")) { // no
-                
-                if (!mkdir("$document_root/$cache_path", 0755, true)) { // so make it
-                    
-                    if (!is_dir("$document_root/$cache_path")) { // check again to protect against race conditions
-                        
-                        // uh-oh, failed to make that directory
-                        sendErrorImage("Failed to create cache directory at: $document_root/$cache_path");
-                    }
-                }
-            }
-        
-        // CACHE DIRECTORY CHECK }
         
         // SCRIPT VARIABLES {
         
@@ -143,6 +91,54 @@
             }
             
         // SCRIPT VARIABLES }
+        
+        // IF THERE IS NO COOKIE {
+        
+            if (!isset($_COOKIE['resolution']) ) {
+            
+                $_COOKIE['resolution'] = '9999,1';
+            }
+        
+        // IF THERE IS NO COOKIE }
+        
+        // IF THERE IS NO SIZE PARAMETER {
+            
+            if ( !isset( $_GET['size'] ) ) {
+                
+                sendImage($source_file, $browser_cache);
+                die();
+            }
+        
+        // IF THERE IS NO SIZE PARAMETER }
+        
+        // IF THERE IS AN UNKNOWN SIZE {
+        
+            if ( !$setup[$_GET['size']] ) {
+                
+                sendImage($source_file, $browser_cache);
+                die();
+            }
+        
+        // IF THERE IS AN UNKNOWN SIZE }
+        
+        // CACHE DIRECTORY CHECK {
+        
+            // does the $cache_path directory exist already?
+            if (!is_dir("$document_root/$cache_path")) { // no
+                
+                if (!mkdir("$document_root/$cache_path", 0755, true)) { // so make it
+                    
+                    if (!is_dir("$document_root/$cache_path")) { // check again to protect against race conditions
+                        
+                        // uh-oh, failed to make that directory
+                        sendErrorImage("Failed to create cache directory at: $document_root/$cache_path");
+                    }
+                }
+            }
+        
+        // CACHE DIRECTORY CHECK }
+        
+        
         
     // PREPARE }
     
