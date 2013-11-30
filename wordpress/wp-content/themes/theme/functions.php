@@ -16,7 +16,7 @@
         
     // }
 
-    // ADAPTIVE IMAGES ( Version 21 (AIFWP 1.1) ) {
+    // ADAPTIVE IMAGES ( Version 22 (AIFWP 1.1) ) {
     
         add_image_size( 'adaptive-image-base', '2000', '2000', /* crop */ false );
     
@@ -219,7 +219,7 @@
         
                 global $current_blog;
                 if ( config_get_curr_blog_id() > 1 ) {
-                    $buffer = str_replace( $current_blog->path  . 'files', '/wp-content/blogs.dir/' . config_get_curr_blog_id() . '/files', $buffer );
+                    $buffer = str_replace( $current_blog->path  . 'files', '/backend/wp-content/blogs.dir/' . config_get_curr_blog_id() . '/files', $buffer );
                 }
                 return $buffer;
             }
@@ -291,41 +291,20 @@
     
 	// }
     
-    // ADAPTIVE-IMAGE SIZES FOR USING IN THE EDITOR ( Version 2 ) {
-	    
+    // IMAGE SIZES FOR EDITOR ( Version 4 ) {
+	    /*
 	    function get_editor_imagesizes() {
             
             // Die Breite und Höhe sollte maximal der für AI benötigten Größe sein
             // Regenerate Images after changes!
             
             $sizes = array(
-                'editor-post' => array(
-                    'width' => '600',
-                    'height' => '600',
+                'test' => array(
+                    'width' => '300',
+                    'height' => '300',
                     'crop' => false,
-                    'label' => 'Posts only',
-                    'posttypes' => array('post')
-                ),
-                'editor-page' => array(
-                    'width' => '600',
-                    'height' => '600',
-                    'crop' => false,
-                    'label' => 'Pages only',
-                    'posttypes' => array('page')
-                ),
-                'editor-post-page' => array(
-                    'width' => '600',
-                    'height' => '600',
-                    'crop' => false,
-                    'label' => 'Pages and Posts',
+                    'label' => 'Test',
                     'posttypes' => array('post','page')
-                ),
-                'editor-all' => array(
-                    'width' => '600',
-                    'height' => '600',
-                    'crop' => false,
-                    'label' => 'All',
-                    'posttypes' => false
                 )
             );
 
@@ -380,18 +359,47 @@
             foreach ( get_editor_imagesizes() as $size => $item ) {
                 
                 if ( strpos( $html, 'size-' . $size ) !== false ) {
-                
+                    
                     $html = preg_replace( '/(.*)(src="(.*)\.(jpg|jpeg|gif|png)")(.*)/', '$1src="' . $src[0] . '?size=' . $size . '"$5', $html );
             	}
 	        }
 	        
-	        $html = remove_image_dimensions_attributes($html);
-    	    
-            $html = preg_replace( '/(.*)(href="(.*)\.(jpg|jpeg|gif|png)")(.*)/', '$1href="' . $src[0] . '?size=zoom"$5', $html );
+	        $html = preg_replace( '/(.*)(href="(.*)\.(jpg|jpeg|gif|png)")(.*)/', '$1href="' . $src[0] . '?size=zoom"$5', $html );
             
             return $html;
         }
-        add_filter( 'image_send_to_editor', 'my_image_send_to_editor', 10, 7 );
+        add_filter( 'image_send_to_editor', 'my_image_send_to_editor', 10, 8 );
+        */
+        
+        function tool_filter_the_content( $content ) {
+            
+	        $content = remove_image_dimensions_attributes( $content );
+        	
+            return $content;
+        }
+        add_filter( 'the_content', 'tool_filter_the_content', 20 );
+        
+        function fixed_img_caption_shortcode( $attr, $content = null ) {
+            
+            /* Source: WordPress > .media.php > The Caption shortcode. */
+            
+            if ( ! isset( $attr['caption'] ) ) {
+        		if ( preg_match( '#((?:<a [^>]+>\s*)?<img [^>]+>(?:\s*</a>)?)(.*)#is', $content, $matches ) ) {
+        			$content = $matches[1];
+        			$attr['caption'] = trim( $matches[2] );
+        		}
+        	}
+        	
+        	// $id = str_replace( ' attachment_', '', $attr['id'] );
+        	
+        	$size = preg_replace( '/(.*)(size=(.*))" width(.*)/', '$3', $content );
+        	
+        	$content = str_replace( 'size-' . $size . ' ', '', $content );
+        	
+            return '<div class="size-' . $size . ' wp-caption ' . esc_attr( $attr['align'] ) . '">' . do_shortcode( $content ) . '<p class="wp-caption-text">' . $attr['caption'] . '</p></div>';
+        }
+        add_shortcode('wp_caption', 'fixed_img_caption_shortcode');
+        add_shortcode('caption', 'fixed_img_caption_shortcode');
         
 	// }
 ?>
