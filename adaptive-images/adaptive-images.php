@@ -11,14 +11,16 @@
         
         extended by:
             GitHub:     https://github.com/johannheyne/adaptive-images-for-wordpress
-            Version:    1
-            Changed:    2013.09.07 15:28
+            Version:    1.1
+            Changed:    2013.11.30 13:57
         
     } */
     
     // CONFIG {
     
-        $themefolder = 'themefolder/';
+        ini_set('memory_limit', '128M');
+        
+        $themefolder = 'themefoldername/';
         $wordpressfolder = 'backend/';
         
     // }
@@ -55,9 +57,12 @@
         // IF THERE IS NO SIZE PARAMETER }
         
         // SCRIPT VARIABLES {
-        
+            
+            $highresmode        = false;
+            
             $resolutions        = $config['resolutions']; // the image break-points to use in the src-parameter 
             $cache_path         = $config['cache_path']; // where to store the generated re-sized images. Specify from your document root!
+            $highresmode        = $config['highres_mode']; // use high resolutions, means double the pixel size of image dimensions, prevent retina option
             $jpg_quality        = $config['jpg_quality']; // the quality of any generated JPGs on a scale of 0 to 100
             $jpg_quality_retina = $config['jpg_quality_retina']; // the quality of any generated JPGs on a scale of 0 to 100 for retina
             $retina             = true;
@@ -74,7 +79,7 @@
             $setup_crop = false;
             $setup_filter = false;
             $lowres = FALSE;
-        
+            
             if ( isset($setup[$_GET['size']]['ratio']) ) $setup_ratio_arr  = explode(':', $setup[$_GET['size']]['ratio']);
             
             if ( isset( $_GET['ratio'] ) ) {
@@ -478,7 +483,7 @@
             
             // RESAMPLE IMAGE {
             
-                ImageCopyResampled($dst, $src, $img_offset['x'], $img_offset['y'], 0, 0, $img_scaled['w'], $img_scaled['h'], $img_src['w'], $img_src['h']); // do the resize in memory
+                ImageCopyResampled($dst, $src, ceil( $img_offset['x'] ), ceil( $img_offset['y'] ), 0, 0, ceil( $img_scaled['w'] ), ceil( $img_scaled['h'] ), ceil( $img_src['w'] ), ceil( $img_src['h'] ) ); // do the resize in memory
                 
                 ImageDestroy($src);
                 
@@ -784,6 +789,7 @@
                 }
                 
                 if ( !$retina ) $pixel_density = 1;
+                if ( $highresmode ) $pixel_density = 2;
                 
                 if ( $pixel_density >= 2 ) $jpg_quality = $jpg_quality_retina;
                 
