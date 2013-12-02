@@ -12,7 +12,7 @@
         extended by:
             GitHub:     https://github.com/johannheyne/adaptive-images-for-wordpress
             Version:    1.1
-            Changed:    2013.11.30 13:57
+            Changed:    2013.12.02 11:43
         
     } */
     
@@ -483,7 +483,26 @@
             
             // RESAMPLE IMAGE {
             
-                ImageCopyResampled($dst, $src, ceil( $img_offset['x'] ), ceil( $img_offset['y'] ), 0, 0, ceil( $img_scaled['w'] ), ceil( $img_scaled['h'] ), ceil( $img_src['w'] ), ceil( $img_src['h'] ) ); // do the resize in memory
+                /* DEBUG WITH ERROR-LOG
+                    
+                    error_log( "\n" . '----------------------------------------------' . "\n"
+                
+                        . $_GET['size'] . "\n"
+                    
+                        . "img_src: " . print_r( $img_src, true ) . "\n"
+                        . "img_new: " . print_r( $img_new, true ) . "\n"
+                        . "img_scaled: " . print_r( $img_scaled, true ) . "\n"
+                        . "img_offset: " . print_r( $img_offset, true ) . "\n"
+                    
+                    , 0 );
+                
+                */
+                
+                // fix black lines on the edge of the image
+                $img_scaled['w'] = round( $img_scaled['w'] );
+                $img_scaled['h'] = round( $img_scaled['h'] );
+                
+                ImageCopyResampled($dst, $src, $img_offset['x'], $img_offset['y'], 0, 0, $img_scaled['w'], $img_scaled['h'], $img_src['w'], $img_src['h'] ); // do the resize in memory
                 
                 ImageDestroy($src);
                 
