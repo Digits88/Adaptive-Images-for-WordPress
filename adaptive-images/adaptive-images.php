@@ -12,7 +12,7 @@
         extended by:
             GitHub:     https://github.com/johannheyne/adaptive-images-for-wordpress
             Version:    1.1
-            Changed:    2013.12.02 11:43
+            Changed:    2013.12.13 21:21
         
     } */
     
@@ -570,7 +570,7 @@
                 switch ($extension) {
                     
                     case 'png':
-                    $gotSaved = ImagePng($dst, $cache_file);
+                    $gotSaved = ImagePng($dst, $cache_file, 9, PNG_FILTER_NONE );
                     break;
                     case 'gif':
                     $gotSaved = ImageGif ($dst, $cache_file);
