@@ -11,8 +11,8 @@
         
         extended by:
             GitHub:     https://github.com/johannheyne/adaptive-images-for-wordpress
-            Version:    1.1
-            Changed:    2013.12.19 22:17
+            Version:    1.2
+            Changed:    2014.01.31 14:48
         
     } */
     
@@ -830,7 +830,7 @@
                     
                         $current_breackpoint = $width;
                         
-                        if ( !$img_setup['w'] || $item['val']['w'] > $img_setup['w'] ) {
+                        if ( !$img_setup['w'] || ( $item['val']['w'] * $pixel_density ) > $img_setup['w'] ) {
                             
                             if ( isset( $item['val']['w'] ) ) $img_setup['w'] = ceil( $item['val']['w'] * $pixel_density );
                             if ( isset( $item['val']['h'] ) ) $img_setup['h'] = ceil( $item['val']['h'] * $pixel_density );
