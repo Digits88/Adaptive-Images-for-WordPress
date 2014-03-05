@@ -14,7 +14,7 @@
 <IfModule mod_rewrite.c>
 
 	# omiting directories from the Adaptive-Images process
-	RewriteCond %{REQUEST_URI} !adaptive-images-cache
+	RewriteCond %{REQUEST_URI} !ai-cache
 	RewriteCond %{REQUEST_URI} !wp-admin
 	RewriteCond %{REQUEST_URI} !plugins
 	RewriteCond %{REQUEST_URI} !themes
