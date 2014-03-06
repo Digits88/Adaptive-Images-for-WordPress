@@ -4,10 +4,10 @@
 
 	function config_data() {
 
-		$config['domains'][$_SERVER["HTTP_HOST"]] = 'live';
-		$config['domains']['test.domain.com'] = 'test';
+		$config['domains'][ $_SERVER["HTTP_HOST"] ] = 'live';
+		$config['domains']['test.domain.com'] = 'test'; // @TODO: replace with your test domain like 'test.domain.com'
 
-		$config['wordpressfolder'] = '/';
+		$config['wordpressfolder'] = '/'; // @TODO: if you use wordpress inside a folder change it like '/wordpress/'
 		
 		return $config;
 	}

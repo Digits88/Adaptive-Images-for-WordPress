@@ -277,14 +277,14 @@
 
 					$config = config_data();
 
-					$path = '/' . trim( $config['wordpressfolder'], '/' );
+					$wordpressfolder = trim( $config['wordpressfolder'], '/' );
 
-					if ( $path === '/' ) {
+					if ( $wordpressfolder != '' ) {
 
-						$path = '';
+						$wordpressfolder = $wordpressfolder . '/';
 					}
 
-					$buffer = str_replace( $current_blog->path	. 'files', $path . '/wp-content/blogs.dir/' . config_get_curr_blog_id() . '/files', $buffer );
+					$buffer = str_replace( $current_blog->path	. 'files', '/' . $wordpressfolder . 'wp-content/blogs.dir/' . config_get_curr_blog_id() . '/files', $buffer );
 				}
 
 				return $buffer;
