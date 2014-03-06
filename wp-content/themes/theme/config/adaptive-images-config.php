@@ -7,6 +7,7 @@
 		$config['cache_path']			= 'ai-cache'; 
 		$config['jpg_quality']			= 95; // 100 to 0
 		$config['jpg_quality_retina']	= 50; // 100 to 0
+		$config['highres_mode']			= TRUE; // force retina image resolution on normal screens
 		$config['watch_cache']			= TRUE;
 		$config['browser_cache']		= 60 * 60 * 24; // period of time in second, the images will stay in cache of browsers
 		$config['prevent_cache']		= FALSE; // images will resized on every image request

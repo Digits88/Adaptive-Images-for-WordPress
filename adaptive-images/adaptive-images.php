@@ -19,7 +19,7 @@
 	// CONFIG {
 
 		$wordpressfolder = '/'; // @TODO: if you use wordpress inside a folder change it like '/wordpress/'
-		$themefolder = 'themefoldername'; // @TODO: rename with your themename like 'mytheme'
+		$themefolder = 'twentyfourteen'; // @TODO: rename with your themename like 'mytheme'
 
 		ini_set( 'memory_limit', '128M' );
 
@@ -40,14 +40,14 @@
 
 			// }
 
-			$document_root = str_replace( 'adaptive-images', '', dirname( $_SERVER['SCRIPT_FILENAME'] ) );
+			$document_root = str_replace( 'adaptive-images/adaptive-images.php', '', $_SERVER['SCRIPT_FILENAME'] );
 			$requested_uri = parse_url( urldecode( $_SERVER['REQUEST_URI'] ), PHP_URL_PATH );
 			$requested_file = basename( $requested_uri );
-			$source_file = $document_root.$requested_uri;
-			$source_file = preg_replace( '/( .* )\/( .* )\/wp-content( .* )/', '$1/' . $wordpressfolder . 'wp-content$3', $source_file );
+			$source_file = $document_root . $requested_uri;
+
+			$source_file = preg_replace( '/(.*)\/(.*)\/wp-content(.*)/', '$1/' . $wordpressfolder . 'wp-content$3', $source_file );
 
 			$themepath = $document_root . '/' . $wordpressfolder . 'wp-content/themes/' . trim( $themefolder, '/' ) . '/';
-
 			include( $themepath	 . 'config/adaptive-images-config.php' );
 
 			if ( ! isset( $config ) ) {
@@ -580,7 +580,7 @@
 
 					if ( strtolower( $extension ) == 'jpg' OR strtolower( $extension ) == 'jpeg' ) {
 
-						if ( $amount ! == '0' ) {
+						if ( $amount !== '0' ) {
 
 							$dst = UnsharpMask( $dst, $amount, $radius, $threshold );
 						}
@@ -777,7 +777,7 @@
 						? max( 0, min( 255, ( $amount * ( $bOrig - $bBlur ) ) + $bOrig ) )	 
 						: $bOrig;  
 
-						if ( ( $rOrig ! = $rNew ) || ( $gOrig ! = $gNew ) || ( $bOrig ! = $bNew ) ) {	
+						if ( ( $rOrig != $rNew ) || ( $gOrig != $gNew ) || ( $bOrig != $bNew ) ) {	
 
 							$pixCol = ImageColorAllocate( $img, $rNew, $gNew, $bNew );	
 							ImageSetPixel( $img, $x, $y, $pixCol );	 
