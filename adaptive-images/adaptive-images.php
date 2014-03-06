@@ -18,10 +18,10 @@
 
 	// CONFIG {
 
-		ini_set( 'memory_limit', '128M' );
-
+		$wordpressfolder = '/';
 		$themefolder = 'themefoldername/';
-		$wordpressfolder = 'wordpress/';
+
+		ini_set( 'memory_limit', '128M' );
 
 	// }
 

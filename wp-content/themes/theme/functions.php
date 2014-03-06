@@ -18,7 +18,7 @@
 
 	// }
 
-	// ADAPTIVE IMAGES ( Version 22 (AIFWP 1.1) ) {
+	// ADAPTIVE IMAGES ( Version 23 (AIFWP 1.1) ) {
 
 		add_image_size( 'adaptive-image-base', '2000', '2000', /* crop */ false );
 
@@ -57,6 +57,7 @@
 					$img_param = wp_get_attachment_image_src( $p['id'], $p['name'] );
 					$img_src = $img_param[0];
 				}
+
 				if ( $p['file'] ) {
 
 					$img_src = get_bloginfo('template_url') . '/' . $p['file'];
@@ -274,7 +275,16 @@
 
 				if ( config_get_curr_blog_id() > 1 ) {
 
-					$buffer = str_replace( $current_blog->path	. 'files', '/backend/wp-content/blogs.dir/' . config_get_curr_blog_id() . '/files', $buffer );
+					$config = config_data();
+
+					$path = '/' . trim( $config['wordpressfolder'], '/' );
+
+					if ( $path === '/' ) {
+
+						$path = '';
+					}
+
+					$buffer = str_replace( $current_blog->path	. 'files', $path . '/wp-content/blogs.dir/' . config_get_curr_blog_id() . '/files', $buffer );
 				}
 
 				return $buffer;

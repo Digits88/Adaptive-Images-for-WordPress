@@ -7,6 +7,8 @@
 		$config['domains'][$_SERVER["HTTP_HOST"]] = 'live';
 		$config['domains']['test.domain.com'] = 'test';
 
+		$config['wordpressfolder'] = '/';
+		
 		return $config;
 	}
 
