@@ -17,9 +17,11 @@
 		 global $current_blog;
 
 		 if ( isset( $current_blog ) ) {
+
 			 return $current_blog->blog_id;
 		 }
 		 else {
+
 			 return 1;
 		 }
 	}
@@ -29,9 +31,11 @@
 		$config = config_data();
 
 		if ( isset( $config['domains'][ $_SERVER["HTTP_HOST"] ] ) && $config['domains'][ $_SERVER["HTTP_HOST"] ] == $type ) {
+
 			return true;
 		}
 		else {
+
 			return false;
 		}
 	}
