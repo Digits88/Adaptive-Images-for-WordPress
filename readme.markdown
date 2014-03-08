@@ -25,12 +25,22 @@ $setup = array(
 ```
 theme/page.php – or any other presentation file
 ```php
+// you simply can attach the behavior 'banner' to an image
+<img src="image.jpg?size=banner">
+
+// but using the get_adaptive_image() function is a much future proof solution
 echo get_adaptive_image( array(
   'name' => 'banner', 
   'id' => {image-ID}, 
 ) );
 ```
-Reqirements
+Explanation: The key ```'banner'``` in the array ```$setup``` is the name of an imageset, that holds all the configuration for the responsive behavior of an image, that is called with the name parameter ```'banner'``` via the function get_adaptive_image().
+
+More Options
+-----------------
+jpg quality, sharpen, cropping by with an height or ratio, php image filters, retina display support
+
+Requirements
 -----------
 * requires a current version of WordPress
 * works on Multisites
