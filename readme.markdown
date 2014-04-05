@@ -11,7 +11,7 @@ $setup = array(
         'w' => 480 // the image will have a physical width of 480px on screens with less then 480px width
       ),
       '480' => array(
-        'w' => 768 // the image will have a physical width of 768px on screens with minimum 480px and less then 768p width
+        'w' => 768 // the image will have a physical width of 768px on screens with minimum 480px and less then 768px width
       ),
       '768' => array(
         'w' => 1024
