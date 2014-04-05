@@ -1,6 +1,6 @@
 Adaptive-Images for WordPress
 =============================
-This is not just the WordPress version of the original Adaptive-Images by Mat Wilcox. This is an extended version with which you can configure individually the responsive behavior of each image in the layout.
+This is not just the WordPress version of the original Adaptive-Images by Matt Wilcox. This is an extended version with which you can configure individually the responsive behavior of each image in the layout.
 
 theme/config/adaptive-images-config.php
 ```php
