@@ -11,8 +11,8 @@
 
 		extended by:
 			GitHub:		https://github.com/johannheyne/adaptive-images-for-wordpress
-			Version:	1.2
-			Changed:	2014.03.06 14:35
+			Version:	1.3
+			Changed:	2014.06.20 10:00
 
 	} */
 
@@ -286,6 +286,20 @@
 
 			global $sharpen, $jpg_quality, $jpg_quality_retina, $setup_ratio_arr, $setup_crop, $setup_filter, $retina, $lowres;
 
+			// CROPING SETUP {
+
+				$crop_behavior = array();
+
+					if ( $setup_crop ) {
+
+					if ( isset( $setup_crop['behavior'] ) ) {
+
+						$crop_behavior = explode( ' ', $setup_crop['behavior'] );
+					}
+				}
+
+			// }
+
 			// GET IMAGE EXTENSION {
 
 				$extension = strtolower( pathinfo( $source_file, PATHINFO_EXTENSION ) );
@@ -335,8 +349,11 @@
 
 						if ( $img_setup['w'] && $img_setup['h'] ) {
 
-							$temp['ratio-new'] = $img_setup['w'] / $img_setup['h'];
-							$temp['ratio-changed'] = true;
+							if ( !in_array( 'none' , $crop_behavior ) ) {
+
+								$temp['ratio-new'] = $img_setup['w'] / $img_setup['h'];
+								$temp['ratio-changed'] = true;
+							}
 						}
 
 					// IF FIXED IMAGE WIDTH AND HEIGHT }
@@ -364,6 +381,33 @@
 						}
 
 					// IF SETUP HEIGHT }
+
+					// CROPPING NONE {
+
+						if ( in_array( 'none' , $crop_behavior ) && $img_setup['w'] && $img_setup['h'] ) {
+
+							$img_setup_ratio = $img_setup['w'] / $img_setup['h'];
+							$img_src_ratio = $img_src['w'] / $img_src['h'];
+
+							if ( $img_setup_ratio > $img_src_ratio ) {
+
+								if ( $img_setup['h'] ) {
+
+									$img_new['w'] = $img_setup['h'] * $temp['ratio-src'];
+									$img_new['h'] = $img_setup['h'];
+								}
+							}
+							else {
+
+								if ( $img_setup['w'] ) {
+
+									$img_new['w'] = $img_setup['w'];
+									$img_new['h'] = $img_setup['w'] / $temp['ratio-src'];
+								}
+							}
+						}
+						
+					// }
 
 					// LOWRES RULES {
 
@@ -413,17 +457,10 @@
 						}
 					}
 
-					if ( $setup_crop ) {
+				
+					if ( in_array( 'top' , $crop_behavior ) ) {
 
-						if ( isset( $setup_crop['behavior'] ) ) {
-
-							$crop_behavior = explode( ' ', $setup_crop['behavior'] );
-
-							if ( in_array( 'top' , $crop_behavior ) ) {
-
-								$img_offset['y'] = 0;
-							}
-						}
+						$img_offset['y'] = 0;
 					}
 
 				// OFFSET }

@@ -87,6 +87,8 @@
 			"top" causes (top center) and is good for website screenshots
 			More cropping options will follow.
 
+			$setup['name']['crop']['behavior'] = 'center'; // default
+			$setup['name']['crop']['behavior'] = 'none';
 			$setup['name']['crop']['behavior'] = 'top';
 
 		Handling images with to low resolution
