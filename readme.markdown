@@ -1,6 +1,6 @@
 Adaptive-Images for WordPress
 =============================
-This is not just the WordPress version of the original Adaptive-Images by Mat Wilcox. This is an extended version with which you can configure individually the responsive behavior of each image in the layout.
+This is not just the WordPress version of the original Adaptive-Images by Matt Wilcox. This is an extended version with which you can configure individually the responsive behavior of each image in the layout.
 
 theme/config/adaptive-images-config.php
 ```php
@@ -11,7 +11,7 @@ $setup = array(
         'w' => 480 // the image will have a physical width of 480px on screens with less then 480px width
       ),
       '480' => array(
-        'w' => 768 // the image will have a physical width of 768px on screens with minimum 480px and less then 768p width
+        'w' => 768 // the image will have a physical width of 768px on screens with minimum 480px and less then 768px width
       ),
       '768' => array(
         'w' => 1024
