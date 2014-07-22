@@ -33,7 +33,7 @@
 
 			    $wordpressfolder = trim( $wordpressfolder, '/' );
 
-				if ( ! $wordpressfolder === '' ) {
+				if ( $wordpressfolder !== '' ) {
 
 					$wordpressfolder = $wordpressfolder . '/';
 				}
