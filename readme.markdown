@@ -44,7 +44,7 @@ Requirements
 -----------
 * requires a current version of WordPress
 * works on Multisites
-* intended for use together width plugins like "Advanced-Custom-Fields"
+* intended for use together with plugins like "Advanced-Custom-Fields"
 
 Limitations
 -----------
@@ -52,8 +52,8 @@ Limitations
 
 Dependencies
 ------------
-* Browser with Javascript enabled and exepting Cookies
-  JavaScript is needed for detecting the screens height and width. A Cookie is needed for temporarily storing the screens height and width and making this data aviable in the adaptive-images script. There will be a fallback serving fix defined image sizes if Javascript and/or Cookies are disabled.
+* Browser with Javascript and Cookies enabled.
+  JavaScript is needed for detecting the screens height and width. A Cookie is needed for temporarily storing the screens width and pixel density and making this data aviable in the adaptive-images script. There will be a fallback serving fix defined image sizes if Javascript and/or Cookies are disabled.
 
     
 
