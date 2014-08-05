@@ -52,8 +52,8 @@ Limitations
 
 Dependencies
 ------------
-* Browser with Javascript and Cookies enabled.
-  JavaScript is needed for detecting the screens height and width. A Cookie is needed for temporarily storing the screens width and pixel density and making this data aviable in the adaptive-images script. There will be a fallback serving fix defined image sizes if Javascript and/or Cookies are disabled.
+* Browser with JavaScript and Cookies enabled.
+  JavaScript is needed for detecting the screens height and width. A Cookie is needed for temporarily storing the screens width and pixel density and making this data aviable in the adaptive-images script. There will be a fallback serving fix defined image sizes if JavaScript and/or Cookies are disabled.
 
     
 
