@@ -11,8 +11,8 @@
 
 		extended by:
 			GitHub:		https://github.com/johannheyne/adaptive-images-for-wordpress
-			Version:	1.3
-			Changed:	2014.06.20 10:00
+			Version:	1.4
+			Changed:	2014.09.15 13:30
 
 	} */
 
@@ -620,7 +620,11 @@
 
 						if ( $amount !== '0' ) {
 
-							$dst = UnsharpMask( $dst, $amount, $radius, $threshold );
+							// translate relative amount of config ( 0 - 100 ) to the script amount
+							// -64 = max blur, 64 = max sharpen
+							$amount = ( 64 / 100 ) * $amount;
+
+							$dst = sharpen( $dst, $amount );
 						}
 					}
 				}
@@ -678,210 +682,55 @@
 		}
 
 		/* sharpen image */
-		function UnsharpMask( $img, $amount, $radius, $threshold ) {
+		
+		function sharpen( $src, $factor ) {
+		
+		    // @source: http://duthler.net/2011/06/23/gd-wrapper-for-php-part-3-sharpen-blur/
+		
+			if( $factor == 0 ) return;
 
-			/*
-				New:  
-				- In version 2.1 ( February 26 2007 ) Tom Bishop has done some important speed enhancements. 
-				- From version 2 ( July 17 2006 ) the script uses the imageconvolution function in PHP	
-				version >= 5.1, which improves the performance considerably. 
+		    // get a value thats equal to 64 - abs( factor )
+		    // ( using min/max to limited the factor to 0 - 64 to not get out of range values )
+		    $val1Adjustment = 64 - min( 64, max( 0, abs( $factor ) ) );
 
-				Unsharp masking is a traditional darkroom technique that has proven very suitable for  
-				digital imaging. The principle of unsharp masking is to create a blurred copy of the image 
-				and compare it to the underlying original. The difference in colour values 
-				between the two images is greatest for the pixels near sharp edges. When this  
-				difference is subtracted from the original image, the edges will be 
-				accentuated.  
+		    // the base factor for the "current" pixel depends on if we are blurring or sharpening.
+		    // If we are blurring use 1, if sharpening use 9.
+		    $val1Base = ( abs( $factor ) != $factor )
+		              ? 1
+		              : 9;
 
-				The Amount parameter simply says how much of the effect you want. 100 is 'normal'. 
-				Radius is the radius of the blurring circle of the mask. 'Threshold' is the least 
-				difference in colour values that is allowed between the original and the mask. In practice 
-				this means that low-contrast areas of the picture are left unrendered whereas edges 
-				are treated normally. This is good for pictures of e.g. skin or blue skies. 
+		    // value for the center/currrent pixel is:
+		    //  1 + 0 - max blurring
+		    //  1 + 64- minimal blurring
+		    //  9 + 64- minimal sharpening
+		    //  9 + 0 - maximum sharpening
+		    $val1 = $val1Base + $val1Adjustment;
 
-				Any suggenstions for improvement of the algorithm, expecially regarding the speed 
-				and the roundoff errors in the Gaussian blur process, are welcome. 
+		    // the value for the surrounding pixels is either positive or negative depending on if we are blurring or sharpening.
+		    $val2 = ( abs( $factor ) != $factor )
+		          ? 1
+		          : -1;
 
-			*/
+		    // get source values
+		    $widthSrc = imagesx( $src );
+		    $heightSrc = imagesy( $src );
 
-			////////////////////////////////////////////////////////////////////////////////////////////////   
-			////   
-			////				  Unsharp Mask for PHP - version 2.1.1
-			////   
-			////	Unsharp mask algorithm by Torstein Hønsi 2003-07.
-			////			 thoensi_at_netcom_dot_no.
-			////			   Please leave this notice.
-			////   
-			///////////////////////////////////////////////////////////////////////////////////////////////	  
+		    // setup matrix ..
+		    $matrix = array(
+		            array( $val2, $val2, $val2 ),
+		            array( $val2, $val1, $val2 ),
+		            array( $val2, $val2, $val2 )
+		        );
 
-			// $img is an image that is already created within php using
-			// imgcreatetruecolor. No url! $img must be a truecolor image.
+		    // calculate the correct divisor
+		    // actual divisor is equal to "$divisor = $val1 + $val2 * 8;"
+		    // but the following line is more generic
+		    $divisor = array_sum( array_map( 'array_sum', $matrix ) );
 
-			// Attempt to calibrate the parameters to Photoshop:
-			if ( $amount > 500 ) {
-
-				$amount = 500;
-			}
-
-			$amount = $amount * 0.016;
-
-			if ( $radius > 50 ) {
-
-				$radius = 50;
-			}
-
-			$radius = $radius * 2;
-
-			if ( $threshold > 255 ) {
-
-				$threshold = 255;
-			}	
-
-			$radius = abs( round( $radius ) );	   // Only integers make sense.
-
-			if ( $radius == 0 ) {
-
-				return $img; imagedestroy( $img ); break;
-			}  
-
-			$w = imagesx( $img );
-			$h = imagesy( $img );
-			$imgCanvas = imagecreatetruecolor( $w, $h );
-			$imgBlur = imagecreatetruecolor( $w, $h );
-
-			// Gaussian blur matrix:  
-			//							
-			//	  1	   2	1		   
-			//	  2	   4	2		   
-			//	  1	   2	1		   
-			//							
-			//////////////////////////////////////////////////	
-
-			if ( function_exists( 'imageconvolution' ) ) { // PHP >= 5.1   
-
-				$matrix = array(   
-					array( 1, 2, 1 ),	
-					array( 2, 4, 2 ),	
-					array( 1, 2, 1 )   
-				 ); 
-
-				imagecopy ( $imgBlur, $img, 0, 0, 0, 0, $w, $h );	 
-				imageconvolution( $imgBlur, $matrix, 16, 0 );	  
-			}	
-			else {	 
-
-				// Move copies of the image around one pixel at the time and merge them with weight	 
-				// according to the matrix. The same matrix is simply repeated for higher radii.  
-				for ( $i = 0; $i < $radius; $i++ ) {	
-
-					imagecopy ( $imgBlur, $img, 0, 0, 1, 0, $w - 1, $h ); // left	 
-					imagecopymerge ( $imgBlur, $img, 1, 0, 0, 0, $w, $h, 50 ); // right	 
-					imagecopymerge ( $imgBlur, $img, 0, 0, 0, 0, $w, $h, 50 ); // center	
-					imagecopy ( $imgCanvas, $imgBlur, 0, 0, 0, 0, $w, $h );	 
-
-					imagecopymerge ( $imgBlur, $imgCanvas, 0, 0, 0, 1, $w, $h - 1, 33.33333 ); // up	 
-					imagecopymerge ( $imgBlur, $imgCanvas, 0, 1, 0, 0, $w, $h, 25 ); // down	
-				}  
-			}  
-
-			if ( $threshold > 0 ) {	 
-
-				// Calculate the difference between the blurred pixels and the original	 
-				// and set the pixels  
-				for ( $x = 0; $x < $w-1; $x++ )	 { // each row 
-
-					for ( $y = 0; $y < $h; $y++ )	   { // each pixel	
-
-						$rgbOrig = ImageColorAt( $img, $x, $y );	
-						$rOrig = ( ( $rgbOrig >> 16 ) & 0xFF );	 
-						$gOrig = ( ( $rgbOrig >> 8 ) & 0xFF );	
-						$bOrig = ( $rgbOrig & 0xFF );	 
-
-						$rgbBlur = ImageColorAt( $imgBlur, $x, $y );	
-
-						$rBlur = ( ( $rgbBlur >> 16 ) & 0xFF );	 
-						$gBlur = ( ( $rgbBlur >> 8 ) & 0xFF );	
-						$bBlur = ( $rgbBlur & 0xFF );	 
-
-						// When the masked pixels differ less from the original	 
-						// than the threshold specifies, they are set to their original value.	
-						$rNew = ( abs( $rOrig - $rBlur ) >= $threshold )   
-						? max( 0, min( 255, ( $amount * ( $rOrig - $rBlur ) ) + $rOrig ) )	 
-						: $rOrig;  
-						$gNew = ( abs( $gOrig - $gBlur ) >= $threshold )   
-						? max( 0, min( 255, ( $amount * ( $gOrig - $gBlur ) ) + $gOrig ) )	 
-						: $gOrig;  
-						$bNew = ( abs( $bOrig - $bBlur ) >= $threshold )   
-						? max( 0, min( 255, ( $amount * ( $bOrig - $bBlur ) ) + $bOrig ) )	 
-						: $bOrig;  
-
-						if ( ( $rOrig != $rNew ) || ( $gOrig != $gNew ) || ( $bOrig != $bNew ) ) {	
-
-							$pixCol = ImageColorAllocate( $img, $rNew, $gNew, $bNew );	
-							ImageSetPixel( $img, $x, $y, $pixCol );	 
-						}  
-					}  
-				}  
-			}  
-			else {	
-
-				for ( $x = 0; $x < $w; $x++ ) { // each row	 
-
-					for ( $y = 0; $y < $h; $y++ ) { // each pixel
-
-						$rgbOrig = ImageColorAt( $img, $x, $y );	
-						$rOrig = ( ( $rgbOrig >> 16 ) & 0xFF );	 
-						$gOrig = ( ( $rgbOrig >> 8 ) & 0xFF );	
-						$bOrig = ( $rgbOrig & 0xFF );	 
-
-						$rgbBlur = ImageColorAt( $imgBlur, $x, $y );	
-
-						$rBlur = ( ( $rgbBlur >> 16 ) & 0xFF );	 
-						$gBlur = ( ( $rgbBlur >> 8 ) & 0xFF );	
-						$bBlur = ( $rgbBlur & 0xFF );	 
-
-						$rNew = ( $amount * ( $rOrig - $rBlur ) ) + $rOrig;	 
-
-						if ( $rNew > 255 ) {
-
-							$rNew = 255;
-						}	
-						elseif ( $rNew < 0 ) {
-
-							$rNew = 0;
-						}
-
-						$gNew = ( $amount * ( $gOrig - $gBlur ) ) + $gOrig;	 
-
-						if ( $gNew > 255 ) {
-
-							$gNew = 255;
-						}	
-						elseif ( $gNew < 0 ) {
-
-							$gNew = 0;
-						}	
-
-						$bNew = ( $amount * ( $bOrig - $bBlur ) ) + $bOrig;	 
-
-						if ( $bNew>255 ) {
-
-							$bNew = 255;
-						}	
-						elseif ( $bNew<0 ) {
-
-							$bNew=0;
-						}
-
-						$rgbNew = ( $rNew << 16 ) + ( $gNew <<8 ) + $bNew;	
-						ImageSetPixel( $img, $x, $y, $rgbNew );	 
-					}  
-				}  
-			}  
-			imagedestroy( $imgCanvas );	 
-			imagedestroy( $imgBlur );	 
-
-			return $img;
+		    // apply the matrix
+		    imageconvolution( $src, $matrix, $divisor, 0 );
+		
+			return $src;
 		}
 		
 	// FUNCTIONS }
